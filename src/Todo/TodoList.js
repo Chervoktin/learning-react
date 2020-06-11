@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 import TodoItem from "./TodoItem";
 
 const styles = {
@@ -11,26 +11,50 @@ const styles = {
 };
 
 function TodoList(props) {
-  console.log(props.todos);
+  const [todos, setTodos] = React.useState(props.todos);
+
+  function toggleTodo(id) {
+    setTodos(
+      todos.map((todo) => {
+        if (todo.id === id) {
+          todo.completed = !todo.completed;
+        }
+        return todo;
+      })
+    );
+  }
+
+  function deleteFromList(id) {
+    let index = -1;
+    for (let i = 0; i < todos.length; i++) {
+      if (todos[i].id === id) {
+        index = i;
+      }
+    }
+    if (index > -1) {
+      todos.splice(index, 1);
+    }
+    setTodos(todos.slice());
+  }
+  
   return (
     <ul style={styles.ul}>
-      {
-          props.todos.map((todo,index) =>{
-              return <TodoItem 
-              todo={todo}
-               key = {todo.id} 
-               index = {index}
-               onChange = {props.onToggle}
-               deleteFromList = {props.deleteFromList}
-               />
-          })
-      }
+      {todos.map((todo, index) => {
+        return (
+          <TodoItem
+            todo={todo}
+            key={todo.id}
+            index={index}
+            onChange={toggleTodo}
+            deleteFromList={deleteFromList}
+          />
+        );
+      })}
     </ul>
   );
 }
 
 TodoList.propTypes = {
-    todos: PropTypes.arrayOf(PropTypes.object).isRequired,
-    onToggle: PropTypes.func.isRequired
-}
+  todos: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 export default TodoList;
