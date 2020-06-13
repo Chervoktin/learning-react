@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import PropTypes from "prop-types";
 import TodoItem from "./TodoItem";
+
 
 const styles = {
   ul: {
@@ -11,11 +12,11 @@ const styles = {
 };
 
 function TodoList(props) {
-  const [todos, setTodos] = React.useState(props.todos);
-
+  const [todos, setTodos] = React.useState([]);
+  
   function toggleTodo(id) {
     setTodos(
-      todos.map((todo) => {
+      props.todos.map((todo) => {
         if (todo.id === id) {
           todo.completed = !todo.completed;
         }
@@ -26,20 +27,21 @@ function TodoList(props) {
 
   function deleteFromList(id) {
     let index = -1;
-    for (let i = 0; i < todos.length; i++) {
-      if (todos[i].id === id) {
+    for (let i = 0; i < props.todos.length; i++) {
+      if (props.todos[i].id === id) {
         index = i;
       }
     }
     if (index > -1) {
-      todos.splice(index, 1);
+      props.todos.splice(index, 1);
     }
-    setTodos(todos.slice());
+    setTodos(props.todos.slice());
   }
+  
   
   return (
     <ul style={styles.ul}>
-      {todos.map((todo, index) => {
+      {props.todos.map((todo, index) => {
         return (
           <TodoItem
             todo={todo}
