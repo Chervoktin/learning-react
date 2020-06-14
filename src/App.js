@@ -28,53 +28,57 @@ function App() {
   }, []);
 
   let [value, setValue] = React.useState("test");
-  
-  if((document.location.pathname === '/index') || (document.location.pathname === '/')){
-  return (
-    <div className="wrapper">
-      <Input value={value} setValue={setValue}></Input>
-      <button
-        onClick={() => {
-          let id = 0;
-          if (todos.length !== 0) {
-            id = todos[todos.length - 1].id;
-          }
-          todos.push({ id: id + 1, completed: false, title: value });
-          setTodos(todos.slice());
-        }}
-      >
-        add
-      </button>
-
-      <button
-        onClick={() => {
-          fetch("http://localhost:3001/")
-            .then((res) => res.json())
-            .then(
-              (result) => {
-                setTodos(result);
-              },
-              // Примечание: Обрабатывать ошибки необходимо именно здесь
-              // вместо блока catch(), чтобы не пропустить
-              // исключения из реальных ошибок в компонентах.
-              (error) => {}
-            );
-        }}
-      >
-        update
-      </button>
-
-      <h1>List 1 </h1>
-      <TodoList todos={todos} setTodos={setTodos} />
-      <h1>List 2 </h1>
-      <TodoList todos={todos2} setTodos={setTodos2} />
-      <h1>List 3 </h1>
-      <TodoList todos={todos2} setTodos={setTodos2} />
-    </div>
-  );}else{
+  function index() {
     return (
-      <h1>404 not found</h1>
-    )
+      <div className="wrapper">
+        <Input value={value} setValue={setValue}></Input>
+        <button
+          onClick={() => {
+            let id = 0;
+            if (todos.length !== 0) {
+              id = todos[todos.length - 1].id;
+            }
+            todos.push({ id: id + 1, completed: false, title: value });
+            setTodos(todos.slice());
+          }}
+        >
+          add
+        </button>
+
+        <button
+          onClick={() => {
+            fetch("http://localhost:3001/")
+              .then((res) => res.json())
+              .then(
+                (result) => {
+                  setTodos(result);
+                },
+                // Примечание: Обрабатывать ошибки необходимо именно здесь
+                // вместо блока catch(), чтобы не пропустить
+                // исключения из реальных ошибок в компонентах.
+                (error) => {}
+              );
+          }}
+        >
+          update
+        </button>
+
+        <h1>List 1 </h1>
+        <TodoList todos={todos} setTodos={setTodos} />
+        <h1>List 2 </h1>
+        <TodoList todos={todos2} setTodos={setTodos2} />
+        <h1>List 3 </h1>
+        <TodoList todos={todos2} setTodos={setTodos2} />
+      </div>
+    );
+  }
+  let url = document.location.pathname;
+  switch (url) {
+    case "/":
+    case "/index":
+      return index();
+      default:
+        return <h1>404</h1>
   }
 }
 
