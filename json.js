@@ -1,7 +1,8 @@
-var http = require('http');
+var express = require('express');
+var app = express();
 
-var app = http.createServer(function(req,res){
-    res.setHeader('Content-Type', 'application/json');
+app.get('/', function (req, res) {
+  res.setHeader('Content-Type', 'application/json');
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.end(JSON.stringify([
         { id: 1, completed: false, title: "one" },
@@ -12,4 +13,12 @@ var app = http.createServer(function(req,res){
         { id: 6, completed: false, title: "six" },
       ]));
 });
-app.listen(3001);
+
+
+app.get('/test', function(req, res) {
+  res.sendFile('/json.js' , { root : __dirname});
+})
+
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!');
+});
