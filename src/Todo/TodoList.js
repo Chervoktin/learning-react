@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import TodoItem from "./TodoItem";
 
-
 const styles = {
   ul: {
     listStyle: "none",
@@ -12,7 +11,6 @@ const styles = {
 };
 
 function TodoList(props) {
-  
   function toggleTodo(id) {
     props.setTodos(
       props.todos.map((todo) => {
@@ -35,9 +33,28 @@ function TodoList(props) {
       props.todos.splice(index, 1);
     }
     props.setTodos(props.todos.slice());
+    fetch("http://localhost:3000/delete", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ id: id }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+        },
+        // Примечание: Обрабатывать ошибки необходимо именно здесь
+        // вместо блока catch(), чтобы не пропустить
+        // исключения из реальных ошибок в компонентах.
+        (error) => {
+          alert(error);
+        }
+      );
   }
-  
-  
+
   return (
     <ul style={styles.ul}>
       {props.todos.map((todo, index) => {
