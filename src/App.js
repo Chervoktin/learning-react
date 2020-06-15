@@ -12,7 +12,7 @@ function App() {
   ]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/")
+    fetch("http://localhost:3000/update")
       .then((res) => res.json())
       .then(
         (result) => {
@@ -22,7 +22,7 @@ function App() {
         // вместо блока catch(), чтобы не пропустить
         // исключения из реальных ошибок в компонентах.
         (error) => {
-          alert("ошибка подключения");
+          alert(error);
         }
       );
   }, []);
@@ -38,8 +38,29 @@ function App() {
             if (todos.length !== 0) {
               id = todos[todos.length - 1].id;
             }
-            todos.push({ id: id + 1, completed: false, title: value });
+            let todo = { id: id + 1, completed: false, title: value };
+            todos.push(todo);
             setTodos(todos.slice());
+            fetch("http://localhost:3000/add", {
+              method: "post",
+              headers: {
+                'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+              },
+              body: JSON.stringify(todo),
+            })
+              .then((res) => res.json())
+              .then(
+                (result) => {
+                  console.log(result);
+                },
+                // Примечание: Обрабатывать ошибки необходимо именно здесь
+                // вместо блока catch(), чтобы не пропустить
+                // исключения из реальных ошибок в компонентах.
+                (error) => {
+                  alert(error);
+                }
+              );
           }}
         >
           add
@@ -47,7 +68,7 @@ function App() {
 
         <button
           onClick={() => {
-            fetch("http://localhost:3001/")
+            fetch("http://localhost:3000/update")
               .then((res) => res.json())
               .then(
                 (result) => {
@@ -56,7 +77,9 @@ function App() {
                 // Примечание: Обрабатывать ошибки необходимо именно здесь
                 // вместо блока catch(), чтобы не пропустить
                 // исключения из реальных ошибок в компонентах.
-                (error) => {}
+                (error) => {
+                  alert(error);
+                }
               );
           }}
         >
@@ -77,8 +100,8 @@ function App() {
     case "/":
     case "/index":
       return index();
-      default:
-        return <h1>404</h1>
+    default:
+      return <h1>404</h1>;
   }
 }
 
